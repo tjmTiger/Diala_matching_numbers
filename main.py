@@ -1,8 +1,12 @@
 from number import *
+from board import *
+import random
 
-game_board = []
-num1 = Number(3)
-num2 = Number(4)
+board = []
 
-print(num1 == num2)
-print(num1 == 3)
+for i in range(1,36):
+    board.append(Number(random.randint(1,9)))
+
+board = Board(board)
+print(board)
+print(board[1][1])
