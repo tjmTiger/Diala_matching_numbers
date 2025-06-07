@@ -2,9 +2,8 @@ from number import *  # noqa: F403
 import random
 
 class Board:
-    def __init__(self):
+    def __init__(self, int_list = random.choices(range(1,9), k=35)):
         self.content = [[]]
-        int_list = random.choices(range(1,9), k=35)
         for i in range(len(int_list)):
             if len(self.content[-1]) >= 9:
                 self.content.append([])
@@ -14,7 +13,10 @@ class Board:
         string = ""
         for row in self.content:
             for number in row:
-                string += str(number)
+                if number.gray:
+                    string += '\033[90m' + str(number) + '\033[0m'
+                else: 
+                    string += str(number)
             string += '\n'
         return string
     
@@ -27,3 +29,4 @@ class Board:
             if len(self.content[-1]) >= 9:
                 self.content.append([])
             self.content[-1].append(Number(int_list[i]))  # noqa: F405
+            
