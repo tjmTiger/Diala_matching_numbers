@@ -5,7 +5,7 @@ Regler:
 2) Om summan av adjucent siffror är 10 eller två samma siffror spelaren kan trycka på de och de bli gråa
 
 Gråa siffror:
-Rälknas inte in till "adjucent siffror, t.ex 2 grå(3) 8, 2 och 8 räknas som adjucent, trpts att en grå 3:a finns mellan
+Rälknas inte in till "adjucent siffror, t.ex 2 grå(3) 8, 2 och 8 räknas som adjucent, trots att en grå 3:a finns mellan
 
 Adjucent siffror:
 horsontellt, vertikalt eller diagonalt.
