@@ -28,6 +28,8 @@ pygame.display.set_icon(program_icon)
 ## Window setup ##
 ##################
 font = ['Arial', 20]
+
+
 menu_window = Window(screen)
 
 def continue_game():
@@ -45,6 +47,7 @@ def exit():
     run = False
 Button(menu_window.objects, 150, 90, 100, 30, 'Exit', exit, font = font)
 
+##################
 game_window = Window(screen)
 
 def go_2_menu():
@@ -52,6 +55,12 @@ def go_2_menu():
     global window
     window = "menu"
 Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
+
+# todo: finish + button and score count with display
+def print_click():
+    print("click")
+Button(game_window.objects, 150, 50, 100, 30, 'Score:', print_click, font = font)
+Button(game_window.objects, 350, 50, 30, 30, '+', print_click, font = font)
 
 game_board = ButtonGroup(game_window.objects)
 
@@ -82,6 +91,7 @@ def adjucent(button1, button2):
         else:
             if b == b2:
                 return True
+    # todo: add diagonal rules
     return False
 
 selected = []
