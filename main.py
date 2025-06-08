@@ -120,10 +120,12 @@ selected = []
 def clicked_number(button):
     global selected
     if not button.number.gray:
-        if len(selected) == 1:
+        if len(selected) == 1: # if only one button selected, add secound, otherwise reset selection
             if (selected[0] != button) and adjacent(selected[0], button):
                 selected.append(button)
-        else:
+            else: # if invalid move, reset selection
+                selected = []
+        else: # reset selection
             selected = [button]
 
     if len(selected) == 1:
