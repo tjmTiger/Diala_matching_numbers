@@ -4,12 +4,10 @@ from gui import *
 
 # standard library
 import sys
+import os
 
 # external
 import pygame # om du får error om att du saknar pygame, i terminalen skriv "pip install pygame" och tryck enter
-
-board = Board() # [1]*35
-print(board)
 
 ########################
 ## Pygame Innitiation ##
@@ -21,9 +19,12 @@ fps = 60
 fpsClock = pygame.time.Clock()
 
 pygame.display.set_caption("Matching Numbers")
-program_icon = pygame.image.load('img\icon.png')
+path = os.getcwd()
+program_icon = pygame.image.load(path + '/img/icon.png')
 pygame.display.set_icon(program_icon)
 
+board = Board() # [1]*35
+print(board)
 ##################
 ## Window setup ##
 ##################
