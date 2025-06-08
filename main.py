@@ -8,7 +8,7 @@ import sys
 # external
 import pygame # om du får error om att du saknar pygame, i terminalen skriv "pip install pygame" och tryck enter
 
-board = Board([1]*35) # int_list = list(range(1,9)))
+board = Board() # [1]*35
 print(board)
 
 ########################
@@ -91,7 +91,22 @@ def adjucent(button1, button2):
         else:
             if b == b2:
                 return True
-    # todo: add diagonal rules
+    # special case horisontal right (looping)
+    if (b+1)%9 == 0 and b != 8:
+        b = b1 - 17
+        while b < b1 and b in gray_buttons:
+            b += 1
+        else:
+            if b == b2:
+                return True
+    # diagonal
+    for i in [-10, -8, 8, 10]:
+        b = b1+i
+        while b >= 0 and b <= len(game_board.objects) and b in gray_buttons:
+            b+=i
+        else:
+            if b == b2 and not ((b+1)%9 == 0 and i in [-10, 8]):
+                return True
     return False
 
 selected = []
@@ -135,6 +150,7 @@ while run:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 3: # right mouse button
                 selected = []
+                print("[]")
     
     # switch windows
     if window == "game":
