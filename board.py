@@ -53,3 +53,4 @@ class Board:
             if len(self.content[-1]) >= 9:
                 self.content.append([])
             self.content[-1].append(Number(int_list[i].value))
+        print(self)

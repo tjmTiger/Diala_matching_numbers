@@ -60,11 +60,15 @@ Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
 def print_click():
     print("click")
 Button(game_window.objects, 150, 50, 100, 30, 'Score:', print_click, font = font)
-Button(game_window.objects, 350, 50, 30, 30, '+', print_click, font = font)
+
+def board_add():
+    board.add()
+    update_board()
+Button(game_window.objects, 350, 50, 30, 30, '+', board_add, font = font)
 
 game_board = ButtonGroup(game_window.objects)
 
-def adjucent(button1, button2):
+def adjacent(button1, button2): # if there are bugs in this def, pray too god, couse there is no understanding this
     gray_buttons = []
     global game_board
     for b in range(len(game_board.objects)):
@@ -73,7 +77,9 @@ def adjucent(button1, button2):
             
     b1 = game_board.objects.index(button1)
     b2 = game_board.objects.index(button2)
-    print(gray_buttons)
+
+    # logic
+    def on_right_edge(i): return (i+1)%9 == 0
 
     # horisontal left & vertical up
     for i in [1,9]:
@@ -92,7 +98,7 @@ def adjucent(button1, button2):
             if b == b2:
                 return True
     # special case horisontal right (looping)
-    if (b+1)%9 == 0 and b != 8:
+    if on_right_edge(b) and b != 8:
         b = b1 - 17
         while b < b1 and b in gray_buttons:
             b += 1
@@ -105,7 +111,7 @@ def adjucent(button1, button2):
         while b >= 0 and b <= len(game_board.objects) and b in gray_buttons:
             b+=i
         else:
-            if b == b2 and not ((b+1)%9 == 0 and i in [-10, 8]):
+            if b == b2 and not (on_right_edge(b) and i in [-10, 8]):
                 return True
     return False
 
@@ -114,7 +120,7 @@ def clicked_number(button):
     global selected
     if not button.number.gray:
         if len(selected) == 1:
-            if (selected[0] != button) and adjucent(selected[0], button):
+            if (selected[0] != button) and adjacent(selected[0], button):
                 selected.append(button)
         else:
             selected = [button]
@@ -133,10 +139,18 @@ for y in range(len(board)):
     for x in range(len(board[y])):
         NumberButton(game_board.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
 
-
 #################
 ## Window Loop ##
 #################
+def update_board():
+    global board
+    global game_board
+    skip_existing = len(game_board.objects)
+    for y in range(len(board)):
+        for x in range(len(board[y])):
+            if skip_existing <= 0:
+                NumberButton(game_board.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
+            skip_existing -= 1
 
 run = True
 window = "game"
