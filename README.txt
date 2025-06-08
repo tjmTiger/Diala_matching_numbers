@@ -10,3 +10,5 @@ Rälknas inte in till "adjucent siffror, t.ex 2 grå(3) 8, 2 och 8 räknas som a
 Adjucent siffror:
 horsontellt, vertikalt eller diagonalt.
 speciall regel => horsontellt till förra rad vid kanten räknas med
+
+3) Make it so that if entire row is gray its removed
