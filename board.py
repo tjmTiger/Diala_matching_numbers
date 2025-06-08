@@ -54,3 +54,14 @@ class Board:
                 self.content.append([])
             self.content[-1].append(Number(int_list[i].value))
         print(self)
+        
+    def remove_gray_rows(self):
+        new_content = []
+        for row in range(len(self.content)):
+            for num in self.content[row]:
+                if not num.gray:
+                    new_content.append(self.content[row])
+                    break
+        removed = len(self.content) != len(new_content)
+        self.content = new_content
+        return removed

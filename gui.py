@@ -91,6 +91,13 @@ class ButtonGroup(Button):
     
     def objects_flat(self):
         return [i for j in self.objects for i in j]
+    
+    def clear_objects(self):
+        print("clean")
+        for i in self.objects.copy():
+            self.objects.remove(i)
+            del i
+        self.objects = []
 
 class Window:
     def __init__(self, screen):

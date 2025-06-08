@@ -23,7 +23,7 @@ path = os.getcwd()
 program_icon = pygame.image.load(path + '/img/icon.png')
 pygame.display.set_icon(program_icon)
 
-board = Board() # [1]*35
+board = Board([1]*35) # [1]*35
 print(board)
 ##################
 ## Window setup ##
@@ -64,7 +64,7 @@ Button(game_window.objects, 150, 50, 100, 30, 'Score:', print_click, font = font
 
 def board_add():
     board.add()
-    update_board()
+    # update_board()
 Button(game_window.objects, 350, 50, 30, 30, '+', board_add, font = font)
 
 game_board = ButtonGroup(game_window.objects)
@@ -146,16 +146,26 @@ for y in range(len(board)):
 def update_board():
     global board
     global game_board
-    skip_existing = len(game_board.objects)
-    for y in range(len(board)):
-        for x in range(len(board[y])):
-            if skip_existing <= 0:
+    # remove old buttons
+    if board.remove_gray_rows():
+        game_board.clear_objects()
+        # add new buttons
+        for y in range(len(board)):
+            for x in range(len(board[y])):
                 NumberButton(game_board.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
-            skip_existing -= 1
+    else:
+        # add new buttons
+        skip_existing = len(game_board.objects)
+        for y in range(len(board)):
+            for x in range(len(board[y])):
+                if skip_existing <= 0:
+                    NumberButton(game_board.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
+                else: skip_existing -= 1
 
 run = True
 window = "game"
 while run:
+    update_board()
     screen.fill((250, 218, 221)) # reset canvas
 
     # user imputs
