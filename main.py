@@ -3,16 +3,12 @@ from board import *
 from gui import *
 
 # standard library
-import random
+import sys
 
 # external
 import pygame # om du får error om att du saknar pygame, i terminalen skriv "pip install pygame" och tryck enter
 
-board = Board() # int_list = list(range(1,9)))
-print(board)
-print("-"*9)
-board[0][1].gray = True
-board.add()
+board = Board([1]*35) # int_list = list(range(1,9)))
 print(board)
 
 ########################
@@ -32,27 +28,16 @@ pygame.display.set_icon(program_icon)
 ## Window setup ##
 ##################
 font = ['Arial', 20]
-
-class Window:
-    def __init__(self):
-        self.objects = []
-    
-    def run(self):
-        for object in self.objects:
-            object.process(screen)
-
-menu_window = Window()
+menu_window = Window(screen)
 
 def continue_game():
-    print("Continue button pressed")
     global window
     window = "game"
 Button(menu_window.objects, 150, 10, 100, 30, 'Continue', continue_game, True, font = font)
 
 def go_2_settings():
-    print("Settings button pressed")
-    # global window
-    # window = "settings"
+    global window
+    window = "settings"
 Button(menu_window.objects, 150, 50, 100, 30, 'Settings', go_2_settings, True, font = font)
 
 def exit():
@@ -60,13 +45,69 @@ def exit():
     run = False
 Button(menu_window.objects, 150, 90, 100, 30, 'Exit', exit, font = font)
 
-game_window = Window()
+game_window = Window(screen)
 
 def go_2_menu():
     print("Menu button pressed")
     global window
     window = "menu"
-Button(game_window.objects, 10, 10, 100, 30, 'Menu', go_2_menu, font = font)
+Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
+
+game_board = ButtonGroup(game_window.objects)
+
+def adjucent(button1, button2):
+    gray_buttons = []
+    global game_board
+    for b in range(len(game_board.objects)):
+        if game_board.objects[b].number.gray:
+            gray_buttons.append(b)
+            
+    b1 = game_board.objects.index(button1)
+    b2 = game_board.objects.index(button2)
+    print(gray_buttons)
+
+    # horisontal left & vertical up
+    for i in [1,9]:
+        b = b1-i
+        while b >=0 and b in gray_buttons:
+            b -= i
+        else:
+            if b == b2:
+                return True
+    # horisontal right & vertical down
+    for i in [1,9]:
+        b = b1+i
+        while b <= len(game_board.objects) and b in gray_buttons:
+            b += i
+        else:
+            if b == b2:
+                return True
+    return False
+
+selected = []
+def clicked_number(button):
+    global selected
+    if not button.number.gray:
+        if len(selected) == 1:
+            if (selected[0] != button) and adjucent(selected[0], button):
+                selected.append(button)
+        else:
+            selected = [button]
+
+    if len(selected) == 1:
+        print("[{}, ]".format(selected[0].number))
+    elif len(selected) == 2:
+        print("[{}]".format(str(selected[0].number) + ", " + str(selected[1].number)))
+        if selected[0].number == selected[1].number or selected[0].number + selected[1].number == 10:
+            selected[0].number.gray = True
+            selected[1].number.gray = True
+    else:
+        print(selected)
+
+for y in range(len(board)):
+    for x in range(len(board[y])):
+        NumberButton(game_board.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
+
 
 #################
 ## Window Loop ##
@@ -75,12 +116,15 @@ Button(game_window.objects, 10, 10, 100, 30, 'Menu', go_2_menu, font = font)
 run = True
 window = "game"
 while run:
-    screen.fill((0, 0, 0)) # reset canvas
+    screen.fill((250, 218, 221)) # reset canvas
 
     # user imputs
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # close the game
             run = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 3: # right mouse button
+                selected = []
     
     # switch windows
     if window == "game":

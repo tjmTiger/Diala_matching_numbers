@@ -1,5 +1,4 @@
 # https://thepythoncode.com/article/make-a-button-using-pygame-in-python#:~:text=Now%20we%20can%20finally%20start,button%20will%20be%20pressed%20once.
-import sys
 import pygame
 
 class Button():
@@ -14,16 +13,19 @@ class Button():
 
         self.fillColors = {
             'normal': '#ffffff',
-            'hover': '#666666',
-            'pressed': '#333333',
+            'hover': '#FF99C7',
+            'pressed': '#E75480',
         }
+        self.font = font
 
+        self.edit_buttonText(buttonText)
+        objects.append(self)
+
+    def edit_buttonText(self, text):
         # surface that contains the buttonText
         self.buttonSurface = pygame.Surface((self.width, self.height))
         self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.buttonSurf = pygame.font.SysFont(font[0], font[1]).render(buttonText, True, (20, 20, 20))
-
-        objects.append(self)
+        self.buttonSurf = pygame.font.SysFont(self.font[0], self.font[1]).render(text, True, (20, 20, 20))
 
     def process(self, screen):
         mousePos = pygame.mouse.get_pos()
@@ -46,3 +48,55 @@ class Button():
             self.buttonRect.height/2 - self.buttonSurf.get_rect().height/2
         ])
         screen.blit(self.buttonSurface, self.buttonRect)
+
+class NumberButton(Button):
+    def __init__(self, objects, x, y, width, height, number, onclickFunction=None, onePress=False, font = ['Arial', 40]):
+        super().__init__(objects, x, y, width, height, buttonText=str(number), onclickFunction=onclickFunction, onePress=onePress, font = font)
+        self.fillColors['gray'] = '#666666'
+        self.number = number
+
+    def process(self, screen):
+        mousePos = pygame.mouse.get_pos()
+        if self.number.gray:
+            self.buttonSurface.fill(self.fillColors['gray'])
+        else:
+            self.buttonSurface.fill(self.fillColors['normal'])
+        if self.buttonRect.collidepoint(mousePos):
+            self.buttonSurface.fill(self.fillColors['hover'])
+            if pygame.mouse.get_pressed(num_buttons=3)[0]:
+                self.buttonSurface.fill(self.fillColors['pressed'])
+                if self.onePress:
+                    self.onclickFunction(self)
+                elif not self.alreadyPressed:
+                    self.onclickFunction(self)
+                    self.alreadyPressed = True
+            else:
+                self.alreadyPressed = False
+
+        # blitting the text onto the buttonSurface and then this surface onto the screen
+        self.buttonSurface.blit(self.buttonSurf, [
+            self.buttonRect.width/2 - self.buttonSurf.get_rect().width/2,
+            self.buttonRect.height/2 - self.buttonSurf.get_rect().height/2
+        ])
+        screen.blit(self.buttonSurface, self.buttonRect)
+
+class ButtonGroup(Button):
+    def __init__(self, objects, x=0, y=0, width=0, height=0):
+        super().__init__(objects, x, y, width, height)
+        self.objects = []
+    
+    def process(self, screen):
+        for object in self.objects:
+            object.process(screen)
+    
+    def objects_flat(self):
+        return [i for j in self.objects for i in j]
+
+class Window:
+    def __init__(self, screen):
+        self.objects = []
+        self.screen = screen
+    
+    def run(self):
+        for object in self.objects:
+            object.process(self.screen)

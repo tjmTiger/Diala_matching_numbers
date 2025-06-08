@@ -11,6 +11,8 @@ class Number:
     def __add__(self, b):
         if type(b) is int:
             return self.value + b
+        elif type(b) is str:
+            return str(self.value) + b
         else:
             return self.value + b.value
     
@@ -21,7 +23,7 @@ class Number:
             return self.value == b.value
 
 class Board:
-    def __init__(self, int_list = random.choices(range(1,9), k=35)):
+    def __init__(self, int_list = random.choices(range(1,10), k=35)):
         self.content = [[]]
         for i in range(len(int_list)):
             if len(self.content[-1]) >= 9:
@@ -42,9 +44,12 @@ class Board:
     def __getitem__(self, index):
         return self.content[index]
     
+    def __len__(self):
+        return len(self.content)
+    
     def add(self):
         int_list = [i for j in self.content for i in j if not i.gray] # flaten the list & remove gray numbers
         for i in range(len(int_list)):
             if len(self.content[-1]) >= 9:
                 self.content.append([])
-            self.content[-1].append(Number(int_list[i]))
+            self.content[-1].append(Number(int_list[i].value))
