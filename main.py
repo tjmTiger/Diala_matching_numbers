@@ -23,7 +23,7 @@ path = os.getcwd()
 program_icon = pygame.image.load(path + '/img/icon.png')
 pygame.display.set_icon(program_icon)
 
-board = Board([1]*35) # [1]*35
+board = Board() # [1]*35
 print(board)
 ##################
 ## Window setup ##
@@ -52,7 +52,6 @@ Button(menu_window.objects, 150, 90, 100, 30, 'Exit', exit, font = font)
 game_window = Window(screen)
 
 def go_2_menu():
-    print("Menu button pressed")
     global window
     window = "menu"
 Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)

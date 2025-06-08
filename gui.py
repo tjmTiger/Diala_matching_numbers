@@ -93,7 +93,6 @@ class ButtonGroup(Button):
         return [i for j in self.objects for i in j]
     
     def clear_objects(self):
-        print("clean")
         for i in self.objects.copy():
             self.objects.remove(i)
             del i
