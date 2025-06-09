@@ -27,7 +27,8 @@ class Button():
         self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.buttonSurf = pygame.font.SysFont(self.font[0], self.font[1]).render(text, True, (20, 20, 20))
 
-    def process(self, screen):
+    def process(self, info):
+        screen = info[0]
         mousePos = pygame.mouse.get_pos()
         self.buttonSurface.fill(self.fillColors['normal'])
         if self.buttonRect.collidepoint(mousePos):
@@ -54,7 +55,8 @@ class NumberButton(Button):
         self.fillColors['gray'] = '#666666'
         self.number = number
 
-    def process(self, screen):
+    def process(self, info):
+        screen = info[0]
         mousePos = pygame.mouse.get_pos()
         if self.number.gray:
             self.buttonSurface.fill(self.fillColors['gray'])
@@ -80,15 +82,15 @@ class NumberButton(Button):
         screen.blit(self.buttonSurface, self.buttonRect)
 
 class DisplayButton(Button):
-    def __init__(self, objects, x, y, width, height, buttonTextPermanent, buttonTextChanging, font = ['Arial', 40]):
-        super().__init__(objects, x, y, width, height, buttonText =  buttonTextPermanent + str(buttonTextChanging), font = font)
-        self.buttonTextChanging = buttonTextChanging
+    def __init__(self, objects, x, y, width, height, buttonTextPermanent, font = ['Arial', 40]):
+        super().__init__(objects, x, y, width, height, buttonText =  buttonTextPermanent, font = font)
         self.buttonTextPermanent = buttonTextPermanent
         # self.edit_buttonText(self.buttonTextPermanent + str(self.buttonTextChanging))
     
-    def process(self,screen):
-        print(self.buttonTextPermanent + str(self.buttonTextChanging))
-        self.edit_buttonText(self.buttonTextPermanent + str(self.buttonTextChanging))
+    def process(self,info):
+        screen = info[0]
+        score = info[1]
+        self.edit_buttonText(self.buttonTextPermanent + str(score))
         self.buttonSurface.fill(self.fillColors['normal'])
         # blitting the text onto the buttonSurface and then this surface onto the screen
         self.buttonSurface.blit(self.buttonSurf, [
@@ -103,9 +105,9 @@ class ButtonGroup(Button):
         super().__init__(objects, x, y, width, height)
         self.objects = []
     
-    def process(self, screen):
+    def process(self, info):
         for object in self.objects:
-            object.process(screen)
+            object.process(info)
     
     def objects_flat(self):
         return [i for j in self.objects for i in j]
@@ -117,10 +119,9 @@ class ButtonGroup(Button):
         self.objects = []
 
 class Window:
-    def __init__(self, screen):
+    def __init__(self):
         self.objects = []
-        self.screen = screen
     
-    def run(self):
+    def run(self, info):
         for object in self.objects:
-            object.process(self.screen)
+            object.process(info)

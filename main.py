@@ -31,7 +31,7 @@ print(board)
 font = ['Arial', 20]
 
 
-menu_window = Window(screen)
+menu_window = Window()
 
 def continue_game():
     global window
@@ -49,7 +49,7 @@ def exit():
 Button(menu_window.objects, 150, 90, 100, 30, 'Exit', exit, font = font)
 
 ##################
-game_window = Window(screen)
+game_window = Window()
 
 def go_2_menu():
     global window
@@ -57,7 +57,7 @@ def go_2_menu():
 Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
 
 # todo: finish + button and score count with display
-DisplayButton(game_window.objects, 150, 50, 100, 30, 'Score: ', board.score, font = font)
+DisplayButton(game_window.objects, 150, 50, 100, 30, 'Score: ', font = font)
 
 Button(game_window.objects, 350, 50, 30, 30, '+', board.add, font = font)
 
@@ -162,7 +162,6 @@ def update_board():
 run = True
 window = "game"
 while run:
-    print(board.score)
     update_board()
     screen.fill((250, 218, 221)) # reset canvas
 
@@ -177,9 +176,9 @@ while run:
     
     # switch windows
     if window == "game":
-        game_window.run()
+        game_window.run([screen, board.score])
     elif window == "menu":
-        menu_window.run()
+        menu_window.run([screen, board.score])
     else: window = "menu"
     
     # update display window
