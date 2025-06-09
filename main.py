@@ -57,9 +57,7 @@ def go_2_menu():
 Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
 
 # todo: finish + button and score count with display
-def print_click():
-    print("click")
-Button(game_window.objects, 150, 50, 100, 30, 'Score:', print_click, font = font)
+DisplayButton(game_window.objects, 150, 50, 100, 30, 'Score: ', board.score, font = font)
 
 Button(game_window.objects, 350, 50, 30, 30, '+', board.add, font = font)
 
@@ -164,6 +162,7 @@ def update_board():
 run = True
 window = "game"
 while run:
+    print(board.score)
     update_board()
     screen.fill((250, 218, 221)) # reset canvas
 

@@ -41,7 +41,6 @@ class Button():
                     self.alreadyPressed = True
             else:
                 self.alreadyPressed = False
-
         # blitting the text onto the buttonSurface and then this surface onto the screen
         self.buttonSurface.blit(self.buttonSurf, [
             self.buttonRect.width/2 - self.buttonSurf.get_rect().width/2,
@@ -79,6 +78,25 @@ class NumberButton(Button):
             self.buttonRect.height/2 - self.buttonSurf.get_rect().height/2
         ])
         screen.blit(self.buttonSurface, self.buttonRect)
+
+class DisplayButton(Button):
+    def __init__(self, objects, x, y, width, height, buttonTextPermanent, buttonTextChanging, font = ['Arial', 40]):
+        super().__init__(objects, x, y, width, height, buttonText =  buttonTextPermanent + str(buttonTextChanging), font = font)
+        self.buttonTextChanging = buttonTextChanging
+        self.buttonTextPermanent = buttonTextPermanent
+        # self.edit_buttonText(self.buttonTextPermanent + str(self.buttonTextChanging))
+    
+    def process(self,screen):
+        print(self.buttonTextPermanent + str(self.buttonTextChanging))
+        self.edit_buttonText(self.buttonTextPermanent + str(self.buttonTextChanging))
+        self.buttonSurface.fill(self.fillColors['normal'])
+        # blitting the text onto the buttonSurface and then this surface onto the screen
+        self.buttonSurface.blit(self.buttonSurf, [
+            self.buttonRect.width/2 - self.buttonSurf.get_rect().width/2,
+            self.buttonRect.height/2 - self.buttonSurf.get_rect().height/2
+        ])
+        screen.blit(self.buttonSurface, self.buttonRect)
+
 
 class ButtonGroup(Button):
     def __init__(self, objects, x=0, y=0, width=0, height=0):
