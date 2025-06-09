@@ -13,6 +13,7 @@ speciall regel => horsontellt till förra rad vid kanten räknas med
 
 3) Make it so that if entire row is gray its removed
 4) score: 
-    - Crossing out all the numbers on the field (+150 points)
-    - Removing a row (+10 points)
-    - Score +4 points by connecting numbers that are far apart. ?????
+    [x]  +2 points for connecting a pair of numbers
+    [ ]  Crossing out all the numbers on the field (+150 points)
+    [x]  Removing a row (+10 points) - done
+    [ ]  Score +4 points by connecting numbers that are far apart. ?????

@@ -61,10 +61,7 @@ def print_click():
     print("click")
 Button(game_window.objects, 150, 50, 100, 30, 'Score:', print_click, font = font)
 
-def board_add():
-    board.add()
-    # update_board()
-Button(game_window.objects, 350, 50, 30, 30, '+', board_add, font = font)
+Button(game_window.objects, 350, 50, 30, 30, '+', board.add, font = font)
 
 game_board = ButtonGroup(game_window.objects)
 
@@ -134,6 +131,7 @@ def clicked_number(button):
         if selected[0].number == selected[1].number or selected[0].number + selected[1].number == 10:
             selected[0].number.gray = True
             selected[1].number.gray = True
+            board.score += 2
     else:
         print(selected)
 
