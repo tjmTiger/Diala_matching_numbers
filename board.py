@@ -24,12 +24,7 @@ class Number:
 
 class Board:
     def __init__(self, int_list = random.choices(range(1,10), k=35)):
-        self.score = 0
-        self.content = [[]]
-        for i in range(len(int_list)):
-            if len(self.content[-1]) >= 9:
-                self.content.append([])
-            self.content[-1].append(Number(int_list[i]))
+        self.new_game(int_list)
     
     def __str__(self):
         string = ""
@@ -65,6 +60,16 @@ class Board:
         removed = len(self.content) - len(new_content)
         self.score += removed*10 # 10 points per removed row
         self.content = new_content
-        if len(self.content) == 0:
+        if len(self.content) == 0 and not self.game_over:
             self.score += 180
+            self.game_over = True
         return removed > 0
+    
+    def new_game(self, int_list = random.choices(range(1,10), k=35)):
+        self.game_over = False
+        self.score = 0
+        self.content = [[]]
+        for i in range(len(int_list)):
+            if len(self.content[-1]) >= 9:
+                self.content.append([])
+            self.content[-1].append(Number(int_list[i]))

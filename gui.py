@@ -118,6 +118,52 @@ class ButtonGroup(Button):
             del i
         self.objects = []
 
+    def adjacent(self, button1, button2): # if there are bugs in this def, pray too god, couse there is no understanding this
+        gray_buttons = []
+        for b in range(len(self.objects)):
+            if self.objects[b].number.gray:
+                gray_buttons.append(b)
+                
+        b1 = self.objects.index(button1)
+        b2 = self.objects.index(button2)
+
+        # logic
+        def on_right_edge(i): return (i+1)%9 == 0
+
+        # horisontal left & vertical up
+        for i in [1,9]:
+            b = b1-i
+            while b >=0 and b in gray_buttons:
+                b -= i
+            else:
+                if b == b2:
+                    return True
+        # horisontal right & vertical down
+        for i in [1,9]:
+            b = b1+i
+            while b <= len(self.objects) and b in gray_buttons:
+                b += i
+            else:
+                if b == b2:
+                    return True
+        # special case horisontal right (looping)
+        if on_right_edge(b) and b != 8:
+            b = b1 - 17
+            while b < b1 and b in gray_buttons:
+                b += 1
+            else:
+                if b == b2:
+                    return True
+        # diagonal
+        for i in [-10, -8, 8, 10]:
+            b = b1+i
+            while b >= 0 and b <= len(self.objects) and b in gray_buttons:
+                b+=i
+            else:
+                if b == b2 and not (on_right_edge(b) and i in [-10, 8]):
+                    return True
+        return False
+
 class Window:
     def __init__(self):
         self.objects = []
