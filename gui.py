@@ -82,15 +82,15 @@ class NumberButton(Button):
         screen.blit(self.buttonSurface, self.buttonRect)
 
 class DisplayButton(Button):
-    def __init__(self, objects, x, y, width, height, buttonTextPermanent, font = ['Arial', 40]):
+    def __init__(self, objects, x, y, width, height, buttonTextPermanent, buttonTextFunction=lambda:"", font = ['Arial', 40]):
         super().__init__(objects, x, y, width, height, buttonText =  buttonTextPermanent, font = font)
         self.buttonTextPermanent = buttonTextPermanent
+        self.buttonTextFunction = buttonTextFunction
         # self.edit_buttonText(self.buttonTextPermanent + str(self.buttonTextChanging))
     
     def process(self,info):
         screen = info[0]
-        score = info[1]
-        self.edit_buttonText(self.buttonTextPermanent + str(score))
+        self.edit_buttonText(self.buttonTextPermanent + self.buttonTextFunction())
         self.buttonSurface.fill(self.fillColors['normal'])
         # blitting the text onto the buttonSurface and then this surface onto the screen
         self.buttonSurface.blit(self.buttonSurf, [

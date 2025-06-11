@@ -49,7 +49,16 @@ class Board:
             if len(self.content[-1]) >= 9:
                 self.content.append([])
             self.content[-1].append(Number(int_list[i].value))
-        
+
+    def new_game(self, int_list = random.choices(range(1,10), k=35)):
+        self.game_over = False
+        self.score = 0
+        self.content = [[]]
+        for i in range(len(int_list)):
+            if len(self.content[-1]) >= 9:
+                self.content.append([])
+            self.content[-1].append(Number(int_list[i]))
+
     def remove_gray_rows(self):
         new_content = []
         for row in range(len(self.content)):
@@ -64,12 +73,3 @@ class Board:
             self.score += 180
             self.game_over = True
         return removed > 0
-    
-    def new_game(self, int_list = random.choices(range(1,10), k=35)):
-        self.game_over = False
-        self.score = 0
-        self.content = [[]]
-        for i in range(len(int_list)):
-            if len(self.content[-1]) >= 9:
-                self.content.append([])
-            self.content[-1].append(Number(int_list[i]))
