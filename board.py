@@ -31,10 +31,10 @@ class Number:
 class Board:
     def __init__(self, int_list = random.choices(range(1,10), k=35)):
         self.new_game(int_list)
-        self.add_count = 4 # can use board.add up to 4 times during a game.
 
     def new_game(self, int_list = random.choices(range(1,10), k=35)):
         self.game_over = False
+        self.add_count = 4 # can use board.add up to 4 times during a game.
         self.score = 0
         self.content = [[]]
         for i in range(len(int_list)):
@@ -121,7 +121,7 @@ class Board:
         # diagonal
         for i in [-10, -8, 8, 10]:
             b = b1+i
-            while b >= 0 and b <= len(self.content_flat()) and self.content_flat()[b].gray:
+            while b >= 0 and b < len(self.content_flat()) and self.content_flat()[b].gray:
                 b+=i
             else:
                 if b == b2 and not (on_right_edge(b) and i in [-10, 8]):

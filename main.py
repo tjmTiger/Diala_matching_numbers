@@ -72,6 +72,25 @@ for y in range(len(board)):
     for x in range(len(board[y])):
         NumberButton(board_buttons.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
 
+def update_board():
+    global board
+    global board_buttons
+    # remove old buttons
+    if board.remove_gray_rows():
+        board_buttons.clear_objects()
+        # add new buttons
+        for y in range(len(board)):
+            for x in range(len(board[y])):
+                NumberButton(board_buttons.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
+    else:
+        # add new buttons
+        skip_existing = len(board_buttons.objects)
+        for y in range(len(board)):
+            for x in range(len(board[y])):
+                if skip_existing <= 0:
+                    NumberButton(board_buttons.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
+                else: skip_existing -= 1
+
 ##     Menu     ##
 menu_window = Window()
 
@@ -102,27 +121,9 @@ DisplayButton(game_over_window.objects, 110, 100, 180, 30, 'Game Over', font = f
 DisplayButton(game_over_window.objects, 110, 150, 180, 30, 'Final score: ', show_score, font = font)
 Button(game_over_window.objects, 110, 200, 180, 30, 'New Game', new_game, True, font = font)
 
-#################
-## Window Loop ##
-#################
-def update_board():
-    global board
-    global board_buttons
-    # remove old buttons
-    if board.remove_gray_rows():
-        board_buttons.clear_objects()
-        # add new buttons
-        for y in range(len(board)):
-            for x in range(len(board[y])):
-                NumberButton(board_buttons.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
-    else:
-        # add new buttons
-        skip_existing = len(board_buttons.objects)
-        for y in range(len(board)):
-            for x in range(len(board[y])):
-                if skip_existing <= 0:
-                    NumberButton(board_buttons.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
-                else: skip_existing -= 1
+###############
+## Game Loop ##
+###############
 
 run = True
 window = "game"
