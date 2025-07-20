@@ -54,7 +54,7 @@ selected = []
 def clicked_number(button):
     global selected
     if len(selected) == 1 and not button.number.gray: # if only one button selected, add secound, otherwise reset selection
-        if (selected[0] != button) and board_buttons.adjacent(selected[0], button):
+        if (selected[0] != button) and board_buttons.adjacent(board, selected[0], button):
             selected.append(button)
         else: # if invalid move, reset selection
             selected = []
