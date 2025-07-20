@@ -1,6 +1,6 @@
 Matching Numbers
 
-Regler:
+Game:
 [x] At start 9x4-1 st random siffror (mellan 1 och 9)
 [x] Om summan av adjucent siffror är 10 eller två samma siffror spelaren kan trycka på de och de bli gråa
 
@@ -19,6 +19,7 @@ Regler:
     [ ]  Score +4 points by connecting numbers that are far apart (instead of +1).
 [ ] Can use "+" up to 4 times. Game Over when no more "+" and no more legal moves.
 [ ] Bar indicating what numbers exist on the board. (ex. if all 9 grayed out => make 9 gray on the bar)
+[ ] Make instruction about game rules.
 
 Solving AI:
 [ ] Make list of all possible moves
