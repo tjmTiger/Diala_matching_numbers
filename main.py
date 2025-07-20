@@ -15,7 +15,7 @@ import pygame
 
 pygame.init()
 screen = pygame.display.set_mode((400, 700))
-fps = 60
+fps = 60 # target fps
 fpsClock = pygame.time.Clock()
 
 pygame.display.set_caption("Matching Numbers")
@@ -25,9 +25,9 @@ pygame.display.set_icon(program_icon)
 
 board = Board() # [1]*35
 
-##################
-## Window setup ##
-##################
+###############
+## GUI setup ##
+###############
 font = ['Arial', 20]
 
 ##     Game     ##
@@ -39,6 +39,10 @@ def go_2_menu():
 Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
 
 Button(game_window.objects, 350, 50, 30, 30, '+', board.add, font = font)
+
+def show_add_count():
+    return str(board.add_count)
+DisplayButton(game_window.objects, 370, 70, 20, 20, '', show_add_count, font = font)
 
 def show_score():
     return str(board.score)

@@ -109,8 +109,8 @@ class ButtonGroup(Button):
         for object in self.objects:
             object.process(info)
     
-    def objects_flat(self):
-        return [i for j in self.objects for i in j]
+    # def objects_flat(self): # Unused. Dont remember what it was for. Returning an array of all elements in objects?
+    #     return [i for j in self.objects for i in j]
     
     def clear_objects(self):
         for i in self.objects.copy():

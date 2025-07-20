@@ -25,6 +25,7 @@ class Number:
 class Board:
     def __init__(self, int_list = random.choices(range(1,10), k=35)):
         self.new_game(int_list)
+        self.add_count = 4 # can use board.add up to 4 times during a game.
     
     def __str__(self):
         string = ""
@@ -43,12 +44,17 @@ class Board:
     def __len__(self):
         return len(self.content)
     
+    def get_legal_moves(self):
+        return 0
+    
     def add(self):
-        int_list = [i for j in self.content for i in j if not i.gray] # flaten the list & remove gray numbers
-        for i in range(len(int_list)):
-            if len(self.content[-1]) >= 9:
-                self.content.append([])
-            self.content[-1].append(Number(int_list[i].value))
+        if self.add_count > 0:
+            int_list = [i for j in self.content for i in j if not i.gray] # flaten the list & remove gray numbers
+            for i in range(len(int_list)):
+                if len(self.content[-1]) >= 9:
+                    self.content.append([])
+                self.content[-1].append(Number(int_list[i].value))
+            self.add_count -= 1
 
     def new_game(self, int_list = random.choices(range(1,10), k=35)):
         self.game_over = False
