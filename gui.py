@@ -99,10 +99,11 @@ class DisplayButton(Button):
     Unclickable button for displaying text.
     ----
     '''
-    def __init__(self, objects, x, y, width, height, buttonTextPermanent, buttonTextFunction=lambda:"", font = ['Arial', 40]):
+    def __init__(self, objects, x, y, width, height, buttonTextPermanent, buttonTextFunction=lambda:"",color = 'default' ,font = ['Arial', 40]):
         super().__init__(objects, x, y, width, height, buttonText =  buttonTextPermanent, font = font)
         self.buttonTextPermanent = buttonTextPermanent
         self.buttonTextFunction = buttonTextFunction
+        if color != 'default':self.fillColors['normal'] = color
         # self.edit_buttonText(self.buttonTextPermanent + str(self.buttonTextChanging))
     
     def process(self,info):

@@ -51,8 +51,10 @@ DisplayButton(game_window.objects, 150, 50, 100, 30, 'Score: ',show_score , font
 board_buttons = ButtonGroup(game_window.objects)
 
 selected = []
+selection_button = DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#E75480")
 def clicked_number(button):
     global selected
+    global selection_button
     if len(selected) == 1 and not button.number.gray: # if only one button selected, add secound, otherwise reset selection
         if (selected[0] != button) and board_buttons.adjacent(board, selected[0], button):
             selected.append(button)
@@ -67,6 +69,16 @@ def clicked_number(button):
             selected[1].number.gray = True
             board.score += 1
             selected = []
+    
+    # highlight selected tile
+    if selected:
+        button = selected[0]
+        selection_button.x = button.x+10
+        selection_button.y = button.y+28
+    else:
+        selection_button.x = -100
+        selection_button.y = -100
+        
 
 for y in range(len(board)):
     for x in range(len(board[y])):
