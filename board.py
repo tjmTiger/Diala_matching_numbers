@@ -1,7 +1,10 @@
 import random
 
 class Number:
-    '''Tiles used in board. Contain tile value and if its gray'''
+    '''
+    Tiles used in board. Contain tile value and if its gray
+    ----
+    '''
     def __init__(self, value, gray = False):
         self.value = value
         self.gray = gray
@@ -30,13 +33,19 @@ class Number:
             return self.value == b.value
 
 class Board:
-    '''Object with information of tiles and some game rules'''
+    '''
+    Object with information of tiles and some game rules
+    ----
+    '''
     def __init__(self, int_list = random.choices(range(1,10), k=35)):
         # OBS! for new game option to work correctly, place all initializations in "new_game" function below!
         self.new_game(int_list)
 
     def new_game(self, int_list = random.choices(range(1,10), k=35)):
-        '''Reset state of the board'''
+        '''
+        Reset state of the board
+        ----
+        '''
         self.game_over = False
         self.add_count = 4 # can use board.add up to 4 times during a game.
         self.score = 0
@@ -47,7 +56,10 @@ class Board:
             self.content[-1].append(Number(int_list[i]))
     
     def __str__(self):
-        '''Value of tiles as a string'''
+        '''
+        Value of tiles as a string
+        ----
+        '''
         string = ""
         for row in self.content:
             for number in row:
@@ -62,15 +74,24 @@ class Board:
         return self.content[index]
     
     def __len__(self):
-        '''Return number of rows in a board'''
+        '''
+        Return number of rows in a board
+        ----
+        '''
         return len(self.content)
     
     def get_legal_moves(self):
-        '''todo: Return how many possible moves there are that will result in numbers being grayed out'''
+        '''
+        todo: Return how many possible moves there are that will result in numbers being grayed out
+        ----
+        '''
         return 0
     
     def add(self):
-        '''Add extra row at the end. Can be used max 4 times during a game.'''
+        '''
+        Add extra row at the end. Can be used max 4 times during a game.
+        ----
+        '''
         if self.add_count > 0:
             int_list = [i for j in self.content for i in j if not i.gray] # flaten the list & remove gray numbers
             for i in range(len(int_list)):
@@ -80,7 +101,10 @@ class Board:
             self.add_count -= 1
 
     def remove_gray_rows(self):
-        '''Remove completed rows'''
+        '''
+        Remove completed rows
+        ----
+        '''
         new_content = []
         for row in range(len(self.content)):
             for num in self.content[row]:
@@ -96,11 +120,19 @@ class Board:
         return removed > 0
     
     def content_flat(self):
-        '''Return the 2D content list as a 1D content list'''
+        '''
+        Return the 2D content list as a 1D content list
+        ----
+        '''
         return [i for j in self.content for i in j]
     
-    def adjacent(self, index1, index2):
-        '''Check if two tiles can be grayed out.'''
+    def adjacent(self, index1, index2): # if there are bugs in this def, pray too god, couse there is no understanding this
+        '''
+        Check if two tiles can be grayed out.
+        
+        Todo: bug: some lists get out of range in some bizare scenarios.
+        ----
+        '''
         b1 = index1
         b2 = index2
         def on_right_edge(i): return (i+1)%9 == 0

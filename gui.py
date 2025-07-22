@@ -2,6 +2,10 @@
 import pygame
 
 class Button():
+    '''
+    Button that can display a text and on click run a function
+    ----
+    '''
     def __init__(self, objects, x, y, width, height, buttonText='Button', onclickFunction=None, onePress=False, font = ['Arial', 40]):
         self.x = x
         self.y = y
@@ -28,6 +32,10 @@ class Button():
         self.buttonSurf = pygame.font.SysFont(self.font[0], self.font[1]).render(text, True, (20, 20, 20))
 
     def process(self, info):
+        '''
+        Precesses the onclick funtion of the button. Should be run inside game loop
+        ----
+        '''
         screen = info[0]
         mousePos = pygame.mouse.get_pos()
         self.buttonSurface.fill(self.fillColors['normal'])
@@ -50,6 +58,11 @@ class Button():
         screen.blit(self.buttonSurface, self.buttonRect)
 
 class NumberButton(Button):
+    '''
+    Button that holds a Number displaying its state (gray) and value.
+    Updates displayed value and state.
+    ----
+    '''
     def __init__(self, objects, x, y, width, height, number, onclickFunction=None, onePress=False, font = ['Arial', 40]):
         super().__init__(objects, x, y, width, height, buttonText=str(number), onclickFunction=onclickFunction, onePress=onePress, font = font)
         self.fillColors['gray'] = '#666666'
@@ -82,6 +95,10 @@ class NumberButton(Button):
         screen.blit(self.buttonSurface, self.buttonRect)
 
 class DisplayButton(Button):
+    '''
+    Unclickable button for displaying text.
+    ----
+    '''
     def __init__(self, objects, x, y, width, height, buttonTextPermanent, buttonTextFunction=lambda:"", font = ['Arial', 40]):
         super().__init__(objects, x, y, width, height, buttonText =  buttonTextPermanent, font = font)
         self.buttonTextPermanent = buttonTextPermanent
@@ -101,24 +118,32 @@ class DisplayButton(Button):
 
 
 class ButtonGroup(Button):
+    '''
+    "Div" for buttons. Used for displaying game board.
+    ----
+    '''
     def __init__(self, objects, x=0, y=0, width=0, height=0):
         super().__init__(objects, x, y, width, height)
         self.objects = []
+    
+    def __del__(self):
+        self.clear_objects()
     
     def process(self, info):
         for object in self.objects:
             object.process(info)
     
-    # def objects_flat(self): # Unused. Dont remember what it was for. Returning an array of all elements in objects?
-    #     return [i for j in self.objects for i in j]
-    
     def clear_objects(self):
+        '''
+        Remove all buttons that this group contains.
+        ----
+        '''
         for i in self.objects.copy():
             self.objects.remove(i)
             del i
         self.objects = []
 
-    def adjacent(self, board, button1, button2): # if there are bugs in this def, pray too god, couse there is no understanding this
+    def adjacent(self, board, button1, button2):
         return board.adjacent(self.objects.index(button1), self.objects.index(button2))
 
 class Window:
