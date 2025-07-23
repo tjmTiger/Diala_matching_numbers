@@ -23,7 +23,7 @@ path = os.getcwd()
 program_icon = pygame.image.load(path + '/img/icon.png')
 pygame.display.set_icon(program_icon)
 
-board = Board() # [1]*35
+board = Board([1]*35) # [1]*35
 
 ###############
 ## GUI setup ##

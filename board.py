@@ -80,13 +80,6 @@ class Board:
         '''
         return len(self.content)
     
-    def get_legal_moves(self):
-        '''
-        todo: Return how many possible moves there are that will result in numbers being grayed out
-        ----
-        '''
-        return 0
-    
     def add(self):
         '''
         Add extra row at the end. Can be used max 4 times during a game.
@@ -126,47 +119,51 @@ class Board:
         '''
         return [i for j in self.content for i in j]
     
-    def adjacent(self, index1, index2): # if there are bugs in this def, pray too god, couse there is no understanding this
+    def adjacent(self, index1, index2):
         '''
         Check if two tiles can be grayed out.
-        
-        Todo: bug: some lists get out of range in some bizare scenarios.
         ----
         '''
-        b1 = index1
-        b2 = index2
+        if index2 in self.get_legal_moves(index1):
+            return True
+        return False
+    
+    def get_legal_moves(self, index): # if there are bugs in this def, pray too god, couse there is no understanding this
+        '''
+        Return list with indexes of all possible moves there are that will result in numbers being grayed out from a tile (index)
+        ----
+        '''
+        b1 = index
+        list_of_moves = []
         def on_right_edge(i): return (i+1)%9 == 0
 
-        # horisontal left & vertical up
+        # left & up
         for i in [1,9]:
             b = b1-i
             while b >=0 and self.content_flat()[b].gray:
                 b -= i
             else:
-                if b == b2:
-                    return True
-        # horisontal right & vertical down
+                list_of_moves.append(b)
+        # right & down
         for i in [1,9]:
             b = b1+i
             while b < len(self.content_flat()) and self.content_flat()[b].gray:
                 b += i
             else:
-                if b == b2:
-                    return True
-        # special case horisontal right (looping)
+                list_of_moves.append(b)
+        # special case right (looping)
         if on_right_edge(b) and b != 8:
             b = b1 - 17
             while b < b1 and self.content_flat()[b].gray:
                 b += 1
             else:
-                if b == b2:
-                    return True
+                list_of_moves.append(b)
         # diagonal
         for i in [-10, -8, 8, 10]:
             b = b1+i
             while b >= 0 and b < len(self.content_flat()) and self.content_flat()[b].gray:
                 b+=i
             else:
-                if b == b2 and not (on_right_edge(b) and i in [-10, 8]):
-                    return True
-        return False
+                if not (on_right_edge(b) and i in [-10, 8]):
+                    list_of_moves.append(b)
+        return list_of_moves
