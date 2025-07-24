@@ -23,7 +23,7 @@ path = os.getcwd()
 program_icon = pygame.image.load(path + '/img/icon.png')
 pygame.display.set_icon(program_icon)
 
-board = Board([3, 5, 4, 2, 3, 8, 3, 9, 2, 4, 9, 3, 9,6,1,6,5,4,7,1,2,5,7,2,7,1,2,5,6,3,9,4,1,5,4,3,5,4,2,3,8,3,9,2,4,3,9,6,1,6,5,4,7,2,5,7,2,7,1,2,5,6,3,9,4,1,5,4]) # [1]*35; [1,9,8,8,2,5,9,1,9,5,8,6,7,1,4,7,4,1,9,6,3,4,9,7,1,2,9,8,7,8,1,4,9,7,9]
+board = Board() # [1]*35;
 
 ###############
 ## GUI setup ##
@@ -121,10 +121,12 @@ def update_board():
 solution = []
 solution_tiles = [DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c"), 
                   DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c")]
-
+global solve_button
 def get_solution():
     global solution
     global solution_next
+    global solve_button
+    solve_button.y = -100
     solution = board.find_solution()
     print("Solution")
     print(solution)
@@ -149,9 +151,9 @@ def get_solution():
                 solution_tiles[i].x = -100
                 solution_tiles[i].y = -100
         
-    Button(game_window.objects, 290, 10, 80, 30, 'Next', solution_next_func, font = font)
+    Button(game_window.objects, 300, 10, 80, 30, 'Next', solution_next_func, font = font)
     
-solve_button = Button(game_window.objects, 200, 10, 80, 30, 'Solve', get_solution, font = font)
+solve_button = Button(game_window.objects, 300, 10, 80, 30, 'Solve', get_solution, font = font)
 
 ##     Menu     ##
 menu_window = Window()

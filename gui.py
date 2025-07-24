@@ -22,6 +22,7 @@ class Button():
         }
         self.font = font
 
+        self.buttonText = buttonText
         self.edit_buttonText(buttonText)
         objects.append(self)
 
@@ -37,6 +38,7 @@ class Button():
         ----
         '''
         screen = info[0]
+        self.edit_buttonText(self.buttonText)
         mousePos = pygame.mouse.get_pos()
         self.buttonSurface.fill(self.fillColors['normal'])
         if self.buttonRect.collidepoint(mousePos):
