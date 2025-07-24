@@ -17,7 +17,7 @@ Game:
     [x]  Crossing out all the numbers on the field (+150 points)
     [x]  Removing a row (+10 points) - done
     [ ]  Score +4 points by connecting numbers that are far apart (instead of +1).
-[x] Can use "+" up to 4 times.
+[x] Can use "+" up to 5 times.
 [ ] Game Over when no more "+" and no more legal moves. (check how many legal moves)
 [ ] Bar indicating what numbers exist on the board. (ex. if all 9 grayed out => make 9 gray on the bar)
 [ ] Make instruction about game rules.

@@ -1,4 +1,5 @@
 import random
+import copy
 
 class Number:
     '''
@@ -47,7 +48,7 @@ class Board:
         ----
         '''
         self.game_over = False
-        self.add_count = 4 # can use board.add up to 4 times during a game.
+        self.add_count = 5 # can use board.add up to 5 times during a game.
         self.score = 0
         self.content = [[]]
         for i in range(len(int_list)):
@@ -128,42 +129,110 @@ class Board:
             return True
         return False
     
-    def get_legal_moves(self, index): # if there are bugs in this def, pray too god, couse there is no understanding this
+    def get_legal_moves(self, index1): # if there are bugs in this def, pray too god, couse there is no understanding this
         '''
         Return list with indexes of all possible moves there are that will result in numbers being grayed out from a tile (index)
+        Todo: we r checking twice if numbers are connectable, once in here, and secound time in main, should fix that.
         ----
         '''
-        b1 = index
-        list_of_moves = []
         def on_right_edge(i): return (i+1)%9 == 0
-
+        def on_left_edge(i): return i%9 == 0
+        def not_diagonal_jumping(index, i):
+            return (not (on_right_edge(index) and i in [-10, 8]) and not (on_left_edge(index) and i in [10, -8]))
+        def connectable(i1, i2):
+            if i2 >= 0 and i2 < len(self.content_flat()):
+                value1 = self.content_flat()[i1].value
+                value2 = self.content_flat()[i2].value
+                return (value1 == value2 or value1+value2 == 10)
+            return False
+        list_of_moves = []
         # left & up
         for i in [1,9]:
-            b = b1-i
-            while b >=0 and self.content_flat()[b].gray:
-                b -= i
+            index = index1-i
+            if index < 0:
+                break
+            while index >=0 and self.content_flat()[index].gray:
+                index -= i
             else:
-                list_of_moves.append(b)
+                if connectable(index1, index):
+                    list_of_moves.append(index)
         # right & down
         for i in [1,9]:
-            b = b1+i
-            while b < len(self.content_flat()) and self.content_flat()[b].gray:
-                b += i
+            index = index1+i
+            if index >= len(self.content_flat()):
+                break
+            while index < len(self.content_flat()) and self.content_flat()[index].gray:
+                index += i
             else:
-                list_of_moves.append(b)
+                if connectable(index1, index):
+                    list_of_moves.append(index)
         # special case right (looping)
-        if on_right_edge(b) and b != 8:
-            b = b1 - 17
-            while b < b1 and self.content_flat()[b].gray:
-                b += 1
+        if on_right_edge(index) and index != 8:
+            index = index1 - 17
+            while index < index1 and self.content_flat()[index].gray:
+                index += 1
             else:
-                list_of_moves.append(b)
+                if index >= 0 and connectable(index1, index):
+                    list_of_moves.append(index)
         # diagonal
         for i in [-10, -8, 8, 10]:
-            b = b1+i
-            while b >= 0 and b < len(self.content_flat()) and self.content_flat()[b].gray:
-                b+=i
+            index = index1+i
+            while index >= 0 and index < len(self.content_flat()) and self.content_flat()[index].gray and not_diagonal_jumping(index, i):
+                index+=i
             else:
-                if not (on_right_edge(b) and i in [-10, 8]):
-                    list_of_moves.append(b)
+                if connectable(index1, index) and not_diagonal_jumping(index, i):
+                    list_of_moves.append(index)
         return list_of_moves
+    
+    def get_all_legal_moves(self):
+        list_of_moves = []
+        for index in range(len(self.content_flat())): # loop throgh all indexes of Numbers in board
+            if not self.content_flat()[index].gray:
+                for index2 in self.get_legal_moves(index):
+                    if index2 > index and not self.content_flat()[index2].gray: # avoid duplicates ([index, index2] and [index2, index] are the same moves), by only looking forward, we avoid this dupe
+                        list_of_moves.append([index, index2])
+        if self.add_count > 0:
+            list_of_moves.append(["+"])
+        return list_of_moves
+
+
+    # Solving the game
+    def find_solution(self):
+        def game_won(board):
+            if not board.content_flat():
+                return True
+            return False
+        
+        def add_descendants(board, depth = 0):
+            legal_moves = board.get_all_legal_moves()
+            if legal_moves:
+                for move in legal_moves:
+                    new_board = copy.deepcopy(board)
+                    if move == ["+"]:
+                        new_board.add()
+                    else:
+                        new_board.content_flat()[move[0]].gray = True
+                        new_board.content_flat()[move[1]].gray = True
+                    new_board.remove_gray_rows()
+                    result = add_descendants(new_board, depth+1)
+                    print(depth)
+                    if result["win"]:
+                        result["moves"].insert(0, move)
+                        return result
+                return {"win": False, "moves": []}
+            else:
+                if game_won(board):
+                    return {"win": True, "moves": []}
+                else:
+                    return {"win": False, "moves": []}
+        result = add_descendants(copy.deepcopy(self))
+        """
+        moves = result["moves"]
+        converted_moves = []
+        for move in moves:
+            if not move[0] == "+":
+                converted_moves.append([move[0]%9, move[0]//9, move[1]%9, move[1]//9])
+            else: converted_moves.append(["+"])
+        return converted_moves
+        """
+        return result

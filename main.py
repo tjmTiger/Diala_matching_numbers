@@ -23,7 +23,7 @@ path = os.getcwd()
 program_icon = pygame.image.load(path + '/img/icon.png')
 pygame.display.set_icon(program_icon)
 
-board = Board([1]*35) # [1]*35
+board = Board([3, 5, 4, 2, 3, 8, 3, 9, 2, 4, 9, 3, 9,6,1,6,5,4,7,1,2,5,7,2,7,1,2,5,6,3,9,4,1,5,4,3,5,4,2,3,8,3,9,2,4,3,9,6,1,6,5,4,7,2,5,7,2,7,1,2,5,6,3,9,4,1,5,4]) # [1]*35; [1,9,8,8,2,5,9,1,9,5,8,6,7,1,4,7,4,1,9,6,3,4,9,7,1,2,9,8,7,8,1,4,9,7,9]
 
 ###############
 ## GUI setup ##
@@ -38,7 +38,13 @@ def go_2_menu():
     window = "menu"
 Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
 
-Button(game_window.objects, 350, 50, 30, 30, '+', board.add, font = font)
+add_button = Button(game_window.objects, 350, 50, 30, 30, '+', board.add, font = font)
+
+def print_hint():
+    print("Legal moves:")
+    print(board.get_all_legal_moves())
+    
+# Button(game_window.objects, 300, 10, 80, 30, 'Hint', print_hint, font = font)
 
 def show_add_count():
     return str(board.add_count)
@@ -102,6 +108,50 @@ def update_board():
                 if skip_existing <= 0:
                     NumberButton(board_buttons.objects, 40*x+20, 40*y+100, 40, 40, board[y][x], clicked_number, font = font)
                 else: skip_existing -= 1
+    #todo: check if game over due to lack of moves (use board.get_legal_moves())
+    if board.add_count == 0:
+        no_moves = True
+        for index in range(len(board.content_flat())):
+            if board.get_legal_moves(index):
+                no_moves = False
+        if no_moves:
+            print(no_moves)
+            board.game_over = True
+
+solution = []
+solution_tiles = [DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c"), 
+                  DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c")]
+
+def get_solution():
+    global solution
+    global solution_next
+    solution = board.find_solution()
+    print("Solution")
+    print(solution)
+    
+    def solution_next_func():
+        global solution
+        global solution_tiles
+        if solution["moves"]:
+            move = solution["moves"].pop(0)
+            if move[0] == "+":
+                for i in range(2):
+                    solution_tiles[i].x = add_button.x + 10
+                    solution_tiles[i].y = add_button.y + 28
+            else:
+                for i in range(2):
+                    x = board_buttons.objects[move[i]].x
+                    y = board_buttons.objects[move[i]].y
+                    solution_tiles[i].x = x + 10
+                    solution_tiles[i].y = y + 28
+        else:
+            for i in range(2):
+                solution_tiles[i].x = -100
+                solution_tiles[i].y = -100
+        
+    Button(game_window.objects, 290, 10, 80, 30, 'Next', solution_next_func, font = font)
+    
+solve_button = Button(game_window.objects, 200, 10, 80, 30, 'Solve', get_solution, font = font)
 
 ##     Menu     ##
 menu_window = Window()
@@ -136,7 +186,6 @@ Button(game_over_window.objects, 110, 200, 180, 30, 'New Game', new_game, True, 
 ###############
 ## Game Loop ##
 ###############
-
 run = True
 window = "game"
 while run:
