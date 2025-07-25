@@ -38,13 +38,11 @@ def go_2_menu():
     window = "menu"
 Button(game_window.objects, 20, 10, 100, 30, 'Menu', go_2_menu, font = font)
 
-add_button = Button(game_window.objects, 350, 50, 30, 30, '+', board.add, font = font)
+def add():
+    board.add()
+    solution.next_move()
 
-def print_hint():
-    print("Legal moves:")
-    print(board.get_all_legal_moves())
-    
-# Button(game_window.objects, 300, 10, 80, 30, 'Hint', print_hint, font = font)
+add_button = Button(game_window.objects, 350, 50, 30, 30, '+', add, font = font)
 
 def show_add_count():
     return str(board.add_count)
@@ -55,6 +53,61 @@ def show_score():
 DisplayButton(game_window.objects, 150, 50, 100, 30, 'Score: ',show_score , font = font)
 
 board_buttons = ButtonGroup(game_window.objects)
+
+class Solution:
+    def __init__(self, board):
+        self.board = board
+        self.button = {
+            "solve": Button(game_window.objects, 300, 10, 80, 30, 'Solve', self.get_solution, font = font), # solve button
+            "start": Button(game_window.objects, 280, -100, 100, 30, 'Show Next', self.next_move, font = font),
+            "marker0": DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c"), 
+            "marker1": DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c")
+            }
+
+    def delete(self):
+        for item in self.button:
+            self.button[item].y = -100
+
+
+    def get_solution(self):
+        self.solution = []
+        self.button["solve"].y = -100
+        self.button["start"].y = 10
+        self.button["marker0"].y = -100
+        self.button["marker1"].y = -100
+        self.solution = self.board.find_solution()
+
+        # print("Solution\n{}".format(self.solution))
+
+    def __button_location(self, index):
+            x0 = board_buttons.objects[0].x
+            width = board_buttons.objects[0].width
+            y0 = board_buttons.objects[0].y
+            height = board_buttons.objects[0].height
+            y = index//9*height + y0
+            x = index%9*width + x0
+            return [x, y]
+
+    def next_move(self):
+        self.button["solve"].y = -100
+        if self.solution["moves"]:
+            move = self.solution["moves"].pop(0)
+            if move[0] == "+":
+                for i in range(2):
+                    self.button["marker{}".format(i)].x = add_button.x + 10
+                    self.button["marker{}".format(i)].y = add_button.y + 31
+            else:
+                for i in range(2):
+                    x = self.__button_location(move[i])[0] # board_buttons.objects[move[i]].x
+                    y = self.__button_location(move[i])[1] # board_buttons.objects[move[i]].y
+                    self.button["marker{}".format(i)].x = x + 10
+                    self.button["marker{}".format(i)].y = y + 31
+        else:
+            for i in range(2):
+                self.button["marker{}".format(i)].x = -100
+                self.button["marker{}".format(i)].y = -100
+        
+solution = Solution(board)
 
 selected = []
 selection_button = DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#E75480")
@@ -75,6 +128,7 @@ def clicked_number(button):
             selected[1].number.gray = True
             board.score += 1
             selected = []
+            solution.next_move()
     
     # highlight selected tile
     if selected:
@@ -84,7 +138,6 @@ def clicked_number(button):
     else:
         selection_button.x = -100
         selection_button.y = -100
-        
 
 for y in range(len(board)):
     for x in range(len(board[y])):
@@ -115,45 +168,7 @@ def update_board():
             if board.get_legal_moves(index):
                 no_moves = False
         if no_moves:
-            print(no_moves)
             board.game_over = True
-
-solution = []
-solution_tiles = [DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c"), 
-                  DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c")]
-global solve_button
-def get_solution():
-    global solution
-    global solution_next
-    global solve_button
-    solve_button.y = -100
-    solution = board.find_solution()
-    print("Solution")
-    print(solution)
-    
-    def solution_next_func():
-        global solution
-        global solution_tiles
-        if solution["moves"]:
-            move = solution["moves"].pop(0)
-            if move[0] == "+":
-                for i in range(2):
-                    solution_tiles[i].x = add_button.x + 10
-                    solution_tiles[i].y = add_button.y + 28
-            else:
-                for i in range(2):
-                    x = board_buttons.objects[move[i]].x
-                    y = board_buttons.objects[move[i]].y
-                    solution_tiles[i].x = x + 10
-                    solution_tiles[i].y = y + 28
-        else:
-            for i in range(2):
-                solution_tiles[i].x = -100
-                solution_tiles[i].y = -100
-        
-    Button(game_window.objects, 300, 10, 80, 30, 'Next', solution_next_func, font = font)
-    
-solve_button = Button(game_window.objects, 300, 10, 80, 30, 'Solve', get_solution, font = font)
 
 ##     Menu     ##
 menu_window = Window()
@@ -167,10 +182,13 @@ def new_game():
     global board
     global window
     global selected
+    global solution
     board.new_game(random.choices(range(1,10), k=35))
     board_buttons.clear_objects()
     selected = []
     window = "game"
+    solution.delete()
+    solution = Solution(board)
 Button(menu_window.objects, 150, 50, 100, 30, 'New Game', new_game, True, font = font)
 
 def exit():

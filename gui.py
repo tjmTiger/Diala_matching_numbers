@@ -1,12 +1,12 @@
-# https://thepythoncode.com/article/make-a-button-using-pygame-in-python#:~:text=Now%20we%20can%20finally%20start,button%20will%20be%20pressed%20once.
 import pygame
 
 class Button():
     '''
-    Button that can display a text and on click run a function
+    Button that can display a text and on click run a function.
+    Adds itself to "objects".
     ----
     '''
-    def __init__(self, objects, x, y, width, height, buttonText='Button', onclickFunction=None, onePress=False, font = ['Arial', 40]):
+    def __init__(self, objects: list, x, y, width, height, buttonText='Button', onclickFunction=None, onePress=False, font = ['Arial', 40]):
         self.x = x
         self.y = y
         self.width = width
@@ -25,6 +25,7 @@ class Button():
         self.buttonText = buttonText
         self.edit_buttonText(buttonText)
         objects.append(self)
+        self.objects = objects
 
     def edit_buttonText(self, text):
         # surface that contains the buttonText
@@ -101,16 +102,16 @@ class DisplayButton(Button):
     Unclickable button for displaying text.
     ----
     '''
-    def __init__(self, objects, x, y, width, height, buttonTextPermanent, buttonTextFunction=lambda:"",color = 'default' ,font = ['Arial', 40]):
-        super().__init__(objects, x, y, width, height, buttonText =  buttonTextPermanent, font = font)
-        self.buttonTextPermanent = buttonTextPermanent
+    def __init__(self, objects, x, y, width, height, buttonText, buttonTextFunction=lambda:"",color = 'default' ,font = ['Arial', 40]):
+        super().__init__(objects, x, y, width, height, buttonText =  buttonText, font = font)
+        self.buttonText = buttonText
         self.buttonTextFunction = buttonTextFunction
         if color != 'default':self.fillColors['normal'] = color
-        # self.edit_buttonText(self.buttonTextPermanent + str(self.buttonTextChanging))
+        # self.edit_buttonText(self.buttonText + str(self.buttonTextChanging))
     
     def process(self,info):
         screen = info[0]
-        self.edit_buttonText(self.buttonTextPermanent + self.buttonTextFunction())
+        self.edit_buttonText(self.buttonText + self.buttonTextFunction())
         self.buttonSurface.fill(self.fillColors['normal'])
         # blitting the text onto the buttonSurface and then this surface onto the screen
         self.buttonSurface.blit(self.buttonSurf, [

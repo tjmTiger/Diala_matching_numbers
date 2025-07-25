@@ -215,7 +215,7 @@ class Board:
                         new_board.content_flat()[move[1]].gray = True
                     new_board.remove_gray_rows()
                     result = add_descendants(new_board, depth+1)
-                    print(depth)
+                    # print(depth)
                     if result["win"]:
                         result["moves"].insert(0, move)
                         return result
