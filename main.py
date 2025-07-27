@@ -63,6 +63,7 @@ class Solution:
             "marker0": DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c"), 
             "marker1": DisplayButton(game_window.objects, -100, -100, 20, 3, "", color = "#2a929c")
             }
+        self.solution = {"moves":[]}
 
     def delete(self):
         for item in self.button:
