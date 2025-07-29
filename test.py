@@ -1,18 +1,8 @@
-class Solution:
-    def __init__(self, board):
-        print(board)
-        self.board = board
+move_leaderboard = []
+move_leaderboard.append([0, 2, 3])
+move_leaderboard.append([4, 22, 1])
+move_leaderboard.append([2, 6, 19])
+move_leaderboard.append([10, 1, 5])
 
-    def __del__(self):
-        print("OBS! Deleting solution.")
-        """
-        while not self.button:
-            item = self.button.popitem()
-            print("-------------")
-            print(item.buttonText)
-            item.y = -100
-            del item
-        del self
-        """
-solution = Solution("hej")
-del solution
+move_leaderboard.sort(reverse=True, key = lambda a: a[0])
+print(move_leaderboard)

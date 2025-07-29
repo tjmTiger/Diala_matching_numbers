@@ -149,6 +149,10 @@ class ButtonGroup(Button):
 
     def adjacent(self, board, button1, button2):
         return board.adjacent(self.objects.index(button1), self.objects.index(button2))
+    
+    def distance(self, board, button1, button2):
+        # To do: return distance between tiles
+        return board.distance(self.objects.index(button1), self.objects.index(button2))
 
 class Window:
     def __init__(self):

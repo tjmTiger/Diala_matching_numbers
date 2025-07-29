@@ -66,6 +66,7 @@ class Solution:
         self.solution = {"moves":[]}
 
     def delete(self):
+        self.solution = {"moves":[]}
         for item in self.button:
             self.button[item].y = -100
 
@@ -76,7 +77,7 @@ class Solution:
         self.button["start"].y = 10
         self.button["marker0"].y = -100
         self.button["marker1"].y = -100
-        self.solution = self.board.find_solution()
+        self.solution = self.board.find_smart_solution()
 
         # print("Solution\n{}".format(self.solution))
 
@@ -90,7 +91,7 @@ class Solution:
             return [x, y]
 
     def next_move(self):
-        self.button["solve"].y = -100
+        # self.button["solve"].y = -100
         if self.solution["moves"]:
             move = self.solution["moves"].pop(0)
             if move[0] == "+":
@@ -122,12 +123,18 @@ def clicked_number(button):
             selected = []
     elif not button.number.gray: # reset selection
         selected = [button]
+    
+    def distance(board, button1, button2):
+        return board_buttons.distance(board, button1, button2)
 
     if len(selected) == 2: # if two selected and they r a valid pair, make them gray
         if selected[0].number == selected[1].number or selected[0].number + selected[1].number == 10:
             selected[0].number.gray = True
             selected[1].number.gray = True
-            board.score += 1
+            # To do: if tiles far away => double score
+            if distance(board, selected[0], selected[1]) > 1:
+                board.score += 2
+            else: board.score += 1
             selected = []
             solution.next_move()
     

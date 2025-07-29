@@ -1,5 +1,6 @@
-import random
-import copy
+from random import choices, shuffle
+from copy import deepcopy
+from math import sqrt, floor
 
 class Number:
     '''
@@ -38,11 +39,11 @@ class Board:
     Object with information of tiles and some game rules
     ----
     '''
-    def __init__(self, int_list = random.choices(range(1,10), k=35)):
+    def __init__(self, int_list = choices(range(1,10), k=35)):
         # OBS! for new game option to work correctly, place all initializations in "new_game" function below!
         self.new_game(int_list)
 
-    def new_game(self, int_list = random.choices(range(1,10), k=35)):
+    def new_game(self, int_list = choices(range(1,10), k=35)):
         '''
         Reset state of the board
         ----
@@ -129,6 +130,17 @@ class Board:
             return True
         return False
     
+    def distance(self, index1, index2):
+        x1, y1 = index1%9, index1//9
+        x2, y2 = index2%9, index2//9
+        # special rule
+        if x1 == 8 and x2 == 0 and y1 == y2-1:
+            return 1
+        elif x2 == 8 and x1 == 0 and y2 == y1-1:
+            return 1
+        else:
+            return floor(sqrt((x2-x1)**2 + (y2-y1)**2))
+    
     def get_legal_moves(self, index1): # if there are bugs in this def, pray too god, couse there is no understanding this
         '''
         Return list with indexes of all possible moves there are that will result in numbers being grayed out from a tile (index)
@@ -207,7 +219,7 @@ class Board:
             legal_moves = board.get_all_legal_moves()
             if legal_moves:
                 for move in legal_moves:
-                    new_board = copy.deepcopy(board)
+                    new_board = deepcopy(board)
                     if move == ["+"]:
                         new_board.add()
                     else:
@@ -225,14 +237,91 @@ class Board:
                     return {"win": True, "moves": []}
                 else:
                     return {"win": False, "moves": []}
-        result = add_descendants(copy.deepcopy(self))
-        """
-        moves = result["moves"]
-        converted_moves = []
-        for move in moves:
-            if not move[0] == "+":
-                converted_moves.append([move[0]%9, move[0]//9, move[1]%9, move[1]//9])
-            else: converted_moves.append(["+"])
-        return converted_moves
-        """
+        result = add_descendants(deepcopy(self))
+        return result
+    
+    def find_optimal_solution(self):
+        def game_won(board):
+            if not board.content_flat():
+                return True
+            return False
+        
+        def add_descendants(board, depth = 0, max_depth = 90):
+            legal_moves = board.get_all_legal_moves()
+            if legal_moves:
+                for move in legal_moves:
+                    new_board = deepcopy(board)
+                    if move == ["+"]:
+                        new_board.add()
+                        new_board.score += 0
+                    else:
+                        if self.distance(move[0], move[1]) > 1:
+                            new_board.score += 2
+                        else: new_board.score += 1
+                        new_board.content_flat()[move[0]].gray = True
+                        new_board.content_flat()[move[1]].gray = True
+                        if new_board.remove_gray_rows():
+                            new_board.score += 10
+                    result = add_descendants(new_board, depth+1)
+                    # print(depth)
+                    if result["win"]:
+                        result["moves"].insert(0, move)
+                        return result
+                return {"win": False, "moves": []}
+            else:
+                if game_won(board):
+                    return {"win": True, "moves": []}
+                else:
+                    return {"win": False, "moves": []}
+        result = add_descendants(deepcopy(self))
+        return result
+    
+
+    def find_smart_solution(self):
+        def game_won(board):
+            if not board.content_flat():
+                return True
+            return False
+        
+        def add_descendants(board, depth = 0):
+            legal_moves = board.get_all_legal_moves()
+            shuffle(legal_moves)
+            if legal_moves:
+                move_leaderboard = []
+                for move in legal_moves:
+                    new_board = deepcopy(board)
+                    if move == ["+"]:
+                        score = 0
+                        new_board.add()
+                    else:
+                        if self.distance(move[0], move[1]) > 1:
+                            score = 2
+                        else: score = 1
+                        new_board.content_flat()[move[0]].gray = True
+                        new_board.content_flat()[move[1]].gray = True
+                        if new_board.remove_gray_rows():
+                            score += 10
+                    
+                    move_leaderboard.append([score, move, new_board])
+                move_leaderboard.sort(reverse=True, key = lambda a: a[0])
+                
+                for item in move_leaderboard:
+                    print(depth)
+                    print(item[1])
+                    move = item[1]
+                    new_board = item[2]
+                    result = add_descendants(new_board, depth+1)
+                    if result["win"]:
+                        result["moves"].insert(0, move)
+                        return result
+                return {"win": False, "moves": []}
+                        
+                        
+            else:
+                if game_won(board):
+                    return {"win": True, "moves": []}
+                else:
+                    return {"win": False, "moves": []}
+        
+        result = add_descendants(deepcopy(self))
         return result
