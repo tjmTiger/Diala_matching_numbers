@@ -18,13 +18,13 @@ Game:
     [x]  Removing a row (+10 points) - done
     [ ]  Score +4 points by connecting numbers that are far apart (instead of +1).
 [x] Can use "+" up to 5 times.
-[ ] Game Over when no more "+" and no more legal moves. (check how many legal moves)
+[x] Game Over when no more "+" and no more legal moves. (check how many legal moves)
 [ ] Bar indicating what numbers exist on the board. (ex. if all 9 grayed out => make 9 gray on the bar)
 [ ] Make instruction about game rules.
 
 Solving AI:
-[ ] Make list of all possible moves
-[ ] Make it so that you can simulate result of all those moves
+[x] Make list of all possible moves
+[x] Make it so that you can simulate result of all those moves
 [ ] Choose cost function
-[ ] Choose search function
+[x] Choose search function
 [ ] Optimize
